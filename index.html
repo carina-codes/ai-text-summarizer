@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Text Summarizer</title>
+  <style>
+    * {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-smooth: always;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      cursor: default;
+    }
+
+    body {
+      min-height: 100vh;
+      align-content: center;
+    }
+
+    .demo {
+      width: 800px;
+      max-width: 100%;
+      margin: auto;
+      padding: 10px;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 25px 0;
+    }
+
+    button {
+      padding: 10px 15px;
+      border-radius: 10px;
+      border: 1px solid;
+      transition: all 0.2s;
+    }
+
+    button:hover {
+      cursor: pointer;
+      background-color: black;
+      border: 1px solid black;
+      color: white;
+    }
+
+    #input {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 20px;
+    }
+
+    #input > div {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    #input > div.actions {
+      flex: .3;
+    }
+
+    #userInput {
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid;
+      height: 346px;
+    }
+
+    #userInput:hover {
+      cursor: pointer;
+    }
+
+    #output {
+      height: 150px;
+      width: 100%;
+      border: 1px solid;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      padding: 15px;
+      overflow-y: scroll;
+      scrollbar-width: auto;
+      scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+      background: whitesmoke;
+      border-color: inherit;
+    }
+
+    #output::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    #output::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    #output::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.3);
+      border-radius: 4px;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      border: 0;
+    }
+
+    .cred {
+      text-align: center;
+      margin: 20px;
+    }
+
+    /* Mobile */
+    @media (max-width: 799px) {
+      #input {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="demo">
+    <h1>AI Text Summarizer</h1>
+
+    <div id="input">
+      <div>
+        <label for="userInput" class="visually-hidden">Add text to summarize</label>
+        <textarea type="text" id="userInput" placeholder="Add text to summarize..."></textarea>
+      </div>
+      <div class="actions">
+        <button onclick="processInput()">Submit</button>
+        <button onclick="resetInput()">Reset</button>
+      </div>
+    </div>
+
+    <div id="output"></div>
+
+    <div class="cred">
+      <span>Built by <a href="#">Carina Codes</a></span>
+    </div>
+  </div>
+
+  <script>
+    async function processInput() {
+      const inputEl = document.getElementById("userInput");
+      const outputEl = document.getElementById("output");
+      const input = inputEl.value.trim();
+
+      if (!input) {
+        outputEl.textContent = "Please enter some text to summarize.";
+        return;
+      }
+
+      outputEl.textContent = "Summarizing...";
+
+      try {
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ message: input }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.result) {
+          outputEl.textContent = data.result;
+        } else {
+          outputEl.textContent = data.error || "Failed to get summary.";
+          console.error("Error detail:", data.details || data);
+        }
+      } catch (error) {
+        outputEl.textContent = "Error: " + error.message;
+        console.error("Request failed:", error);
+      }
+    }
+
+    function resetInput() {
+      document.getElementById("userInput").value = "";
+      document.getElementById("output").textContent = "";
+    }
+  </script>
+
+</body>
+</html>
