@@ -1,0 +1,16 @@
+/* Mobile */
+@media (max-width: 799px) {
+  h1 {
+    font-size: 32px;
+  }
+  #input {
+    flex-direction: column;
+  }
+  .btn, button {
+    padding: 12px 25px;
+    font-size: 16px;
+  }
+  .actions {
+    margin-top: 8px;
+  }
+}
