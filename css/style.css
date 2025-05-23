@@ -129,6 +129,8 @@ header p {
   border-radius: 10px;
   border: 1px solid;
   height: 346px;
+  font-family: var(--paragraph);
+  font-size: 16px;
 }
 
 #userInput:hover {
