@@ -16,7 +16,7 @@
     
     <header>
       <h1>AI Text Summarizer</h1>
-      <p>Get long form text, summarized!</p>
+      <p>Summarize long text.</p>
     </header>
 
     <div id="input">
@@ -45,10 +45,12 @@
 
       if (!input) {
         outputEl.textContent = "Please enter some text to summarize.";
+        outputEl.scrollIntoView({ behavior: "smooth" });
         return;
       }
 
       outputEl.textContent = "Summarizing...";
+      outputEl.scrollIntoView({ behavior: "smooth" });
 
       try {
         const response = await fetch("/api/chat", {
